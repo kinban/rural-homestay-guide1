@@ -1,3 +1,9 @@
+---
+layout: ../layouts/Layout.astro
+title: "Page Title"
+---
+
+
 # 🌾 Local Experiences, Foraging & Community Giving
 
 Guidelines for hosts to structure authentic village activities, connect guests with local artisans, sell local produce directly, and enable non-intrusive community contributions.
