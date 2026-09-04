@@ -1,3 +1,8 @@
+---
+layout: ../layouts/Layout.astro
+title: "Page Title"
+---
+
 # 🌿 Cultural Boundaries, Packing & Eco-Protocols
 
 Guidelines for hosts to communicate sacred boundaries, chemical-free zone rules, terrain packing lists, and pre-arrival guest briefs.
