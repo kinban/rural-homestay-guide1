@@ -1,0 +1,45 @@
+---
+// Calculator Page
+---
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Pricing Calculator</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <style>
+      body { font-family: sans-serif; padding: 20px; max-width: 500px; margin: auto; }
+      .card { border: 1px solid #ccc; padding: 20px; border-radius: 8px; margin-top: 15px; }
+      label { display: block; margin-top: 10px; font-weight: bold; }
+      input { width: 100%; padding: 8px; margin-top: 5px; box-sizing: border-box; }
+      .result { font-size: 1.2rem; color: #0b6623; margin-top: 15px; font-weight: bold; }
+    </style>
+  </head>
+  <body>
+    <h1>Homestay Nightly Rate Calculator</h1>
+    <div class="card">
+      <label>Direct Expenses (Food, Utilities per night ₹):</label>
+      <input type="number" id="expenses" value="400" oninput="calculate()" />
+
+      <label>Fair Daily Host Income Target (₹):</label>
+      <input type="number" id="income" value="800" oninput="calculate()" />
+
+      <label>Community Fund Share (%):</label>
+      <input type="number" id="commShare" value="10" oninput="calculate()" />
+
+      <div class="result" id="totalOutput">Suggested Price: ₹1320 / night</div>
+    </div>
+
+    <script>
+      function calculate() {
+        const exp = parseFloat(document.getElementById('expenses').value) || 0;
+        const inc = parseFloat(document.getElementById('income').value) || 0;
+        const comm = parseFloat(document.getElementById('commShare').value) || 0;
+
+        const base = exp + inc;
+        const finalPrice = base + (base * (comm / 100));
+
+        document.getElementById('totalOutput').innerText = 'Suggested Price: ₹' + Math.round(finalPrice) + ' / night';
+      }
+    </script>
+  </body>
+</html>
