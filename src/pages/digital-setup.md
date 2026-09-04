@@ -1,3 +1,10 @@
+
+---
+layout: ../layouts/Layout.astro
+title: "Page Title"
+---
+
+
 # Zero-Cost Digital Setup for Homestay Hosts
 
 Connect directly with city travelers without paying commission fees to middleman platforms or aggregators.
