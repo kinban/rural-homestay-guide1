@@ -1,9 +1,7 @@
-
 ---
 layout: ../layouts/Layout.astro
 title: "Page Title"
 ---
-
 
 # Zero-Cost Digital Setup for Homestay Hosts
 
