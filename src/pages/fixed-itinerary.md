@@ -1,3 +1,9 @@
+---
+layout: ../layouts/Layout.astro
+title: "Page Title"
+---
+
+
 # 🗓️ Fixed-Departure Itineraries & Stay Logistics
 
 A practical host framework for structuring 3-day weekend stays and 7-day immersion cohorts, while setting transparent expectations around terrain, food, and utilities.
