@@ -1,0 +1,69 @@
+---
+interface Props {
+  title: string;
+}
+
+const { title } = Astro.props;
+
+// ⚠️ Replace 919876543210 with your actual WhatsApp phone number (country code + number, no spaces or +)
+const phoneNumber = "919876543210"; 
+const defaultMessage = encodeURIComponent("Hi! I am using the Rural Homestay Guide and have some feedback:");
+const whatsappUrl = `https://wa.me/${phoneNumber}?text=${defaultMessage}`;
+---
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{title}</title>
+    <style is:global>
+      body {
+        font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+        max-width: 650px;
+        margin: 0 auto;
+        padding: 20px;
+        padding-bottom: 80px; /* Space for floating button */
+        line-height: 1.6;
+        color: #222;
+      }
+      a { color: #0b6623; }
+      .whatsapp-float {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        background-color: #25d366;
+        color: #ffffff;
+        padding: 12px 20px;
+        border-radius: 50px;
+        text-decoration: none;
+        font-weight: bold;
+        font-size: 0.95rem;
+        box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.2);
+        z-index: 1000;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        transition: transform 0.2s ease, background-color 0.2s ease;
+      }
+      .whatsapp-float:hover {
+        background-color: #128c7e;
+        transform: translateY(-2px);
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Main Page Content Goes Here -->
+    <slot />
+
+    <!-- Shared Floating WhatsApp Button -->
+    <a 
+      href={whatsappUrl} 
+      class="whatsapp-float" 
+      target="_blank" 
+      rel="noopener noreferrer"
+      aria-label="Send feedback on WhatsApp"
+    >
+      💬 Feedback on WhatsApp
+    </a>
+  </body>
+</html>
