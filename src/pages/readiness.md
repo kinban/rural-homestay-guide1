@@ -1,3 +1,8 @@
+---
+layout: ../layouts/Layout.astro
+title: "Page Title"
+---
+
 # Village Homestay Readiness Checklist
 
 Before hosting your first guest, ensure your home and community are prepared.
