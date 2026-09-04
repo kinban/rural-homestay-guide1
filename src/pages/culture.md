@@ -26,5 +26,8 @@ Copy and edit this message to send to guests before they arrive:
 > 1. Please carry a reusable water bottle; filtered water is provided.
 > 2. Ask before taking photos of locals or sacred spaces.
 > 3. Carry back any non-biodegradable waste (chips packets, plastic bottles) with you.
+> 4. Make sure to check with us about the weather
+> 5. Make sure to check the list of things to bring
+> 6. Please tell us if you have any specific requirement - which we need to be aware of (please bear in mind - the remoteness of the place) 
 > 
 > *Looking forward to hosting you!"*
