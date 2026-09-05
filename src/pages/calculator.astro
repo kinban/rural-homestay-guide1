@@ -1,45 +1,238 @@
 ---
-// Calculator Page
+import Layout from '../layouts/Layout.astro';
 ---
-<html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <title>Pricing Calculator</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <style>
-      body { font-family: sans-serif; padding: 20px; max-width: 500px; margin: auto; }
-      .card { border: 1px solid #ccc; padding: 20px; border-radius: 8px; margin-top: 15px; }
-      label { display: block; margin-top: 10px; font-weight: bold; }
-      input { width: 100%; padding: 8px; margin-top: 5px; box-sizing: border-box; }
-      .result { font-size: 1.2rem; color: #0b6623; margin-top: 15px; font-weight: bold; }
-    </style>
-  </head>
-  <body>
-    <h1>Homestay Nightly Rate Calculator</h1>
-    <div class="card">
-      <label>Direct Expenses (Food, Utilities per night ₹):</label>
-      <input type="number" id="expenses" value="400" oninput="calculate()" />
 
-      <label>Fair Daily Host Income Target (₹):</label>
-      <input type="number" id="income" value="800" oninput="calculate()" />
+<Layout title="Homestay Pricing Calculator">
+  <h1>🧮 Sustainable Homestay Pricing Calculator</h1>
+  <p>Calculate fair, transparent per-night rates based on local expenses, community contributions, and traveler profile needs.</p>
 
-      <label>Community Fund Share (%):</label>
-      <input type="number" id="commShare" value="10" oninput="calculate()" />
+  <div class="calc-card">
+    <form id="pricing-form">
+      <!-- 1. Basic Parameters -->
+      <div class="input-group">
+        <label for="base-cost">Base Room Expense (₹ / night)</label>
+        <small>Includes laundry, utilities, maintenance, and cleaning.</small>
+        <input type="number" id="base-cost" value="500" min="0" step="50" required />
+      </div>
 
-      <div class="result" id="totalOutput">Suggested Price: ₹1320 / night</div>
+      <div class="input-group">
+        <label for="meal-cost">Raw Ingredient Cost per Person (₹ / day)</label>
+        <small>Market cost for 3 home-cooked local meals.</small>
+        <input type="number" id="meal-cost" value="300" min="0" step="50" required />
+      </div>
+
+      <div class="input-group">
+        <label for="guests">Number of Guests</label>
+        <input type="number" id="guests" value="1" min="1" max="6" required />
+      </div>
+
+      <!-- 2. Traveler Profile Selection -->
+      <div class="input-group">
+        <label for="profile">Traveler Profile / Segment</label>
+        <select id="profile">
+          <option value="standard">Standard / Solo Traveler</option>
+          <option value="solo-female">Solo Female Traveler (includes verified arrival check-in)</option>
+          <option value="family">Family with Children (+15% meal prep & extra bedding)</option>
+          <option value="senior">Senior / Older Adult (+Trail porter luggage assistance)</option>
+          <option value="nomad">Digital Nomad / Remote Worker (+Power backup & desk setup)</option>
+        </select>
+      </div>
+
+      <!-- 3. Community Fund Share -->
+      <div class="input-group">
+        <label for="community-percent">Village Community Fund (% share)</label>
+        <small>Allocated for village path repairs, solar lighting, or local school supplies.</small>
+        <input type="number" id="community-percent" value="10" min="0" max="30" step="1" required />
+      </div>
+
+      <!-- 4. Desired Host Margin -->
+      <div class="input-group">
+        <label for="host-margin">Host Profit Margin (% mark-up)</label>
+        <small>Fair compensation for the host family's cooking and labor.</small>
+        <input type="number" id="host-margin" value="25" min="0" max="100" step="5" required />
+      </div>
+    </form>
+
+    <!-- Results Display Card -->
+    <div class="results-box">
+      <h2>Recommended Price Breakdown</h2>
+      
+      <div class="result-row total-row">
+        <span>Total Recommended Nightly Rate:</span>
+        <strong id="total-price">₹0</strong>
+      </div>
+
+      <hr />
+
+      <div class="result-row">
+        <span>Base Room & Utilities:</span>
+        <span id="breakdown-room">₹0</span>
+      </div>
+
+      <div class="result-row">
+        <span>Total Food & Meal Expenses:</span>
+        <span id="breakdown-food">₹0</span>
+      </div>
+
+      <div class="result-row" id="profile-addon-row" style="display: none;">
+        <span id="profile-addon-label">Segment Add-on:</span>
+        <span id="breakdown-addon">₹0</span>
+      </div>
+
+      <div class="result-row">
+        <span>Host Net Income / Labor Earnings:</span>
+        <span id="breakdown-host">₹0</span>
+      </div>
+
+      <div class="result-row community-highlight">
+        <span>Village Community Fund Share:</span>
+        <span id="breakdown-community">₹0</span>
+      </div>
     </div>
+  </div>
+</Layout>
 
-    <script>
-      function calculate() {
-        const exp = parseFloat(document.getElementById('expenses').value) || 0;
-        const inc = parseFloat(document.getElementById('income').value) || 0;
-        const comm = parseFloat(document.getElementById('commShare').value) || 0;
+<script>
+  function calculatePrice() {
+    const baseRoom = parseFloat((document.getElementById('base-cost') as HTMLInputElement).value) || 0;
+    let mealCostPerPerson = parseFloat((document.getElementById('meal-cost') as HTMLInputElement).value) || 0;
+    const guests = parseInt((document.getElementById('guests') as HTMLInputElement).value) || 1;
+    const profile = (document.getElementById('profile') as HTMLSelectElement).value;
+    const communityPercent = parseFloat((document.getElementById('community-percent') as HTMLInputElement).value) || 0;
+    const hostMargin = parseFloat((document.getElementById('host-margin') as HTMLInputElement).value) || 0;
 
-        const base = exp + inc;
-        const finalPrice = base + (base * (comm / 100));
+    let profileAddon = 0;
+    let profileAddonText = '';
 
-        document.getElementById('totalOutput').innerText = 'Suggested Price: ₹' + Math.round(finalPrice) + ' / night';
-      }
-    </script>
-  </body>
-</html>
+    // Profile-specific cost adjustments
+    if (profile === 'family') {
+      mealCostPerPerson *= 1.15; // 15% extra for customized child meals / extra milk
+      profileAddon = 150; // Extra bedding setup
+      profileAddonText = 'Child Meals & Extra Bedding Add-on';
+    } else if (profile === 'senior') {
+      profileAddon = 200; // Trail porter assistance fee
+      profileAddonText = 'Trail Porter / Luggage Support Fee';
+    } else if (profile === 'nomad') {
+      profileAddon = 100; // Dedicated power backup / solar station fee
+      profileAddonText = 'Power Station & Workspace Surcharge';
+    }
+
+    const totalFoodCost = mealCostPerPerson * guests;
+    const directExpenses = baseRoom + totalFoodCost + profileAddon;
+    
+    // Calculate host profit margin
+    const hostEarning = directExpenses * (hostMargin / 100);
+    
+    // Subtotal before community fund
+    const subtotal = directExpenses + hostEarning;
+    
+    // Calculate community fund contribution
+    const communityFund = subtotal * (communityPercent / 100);
+    
+    // Final Nightly Rate
+    const totalPrice = Math.round(subtotal + communityFund);
+
+    // Update DOM
+    document.getElementById('total-price')!.textContent = `₹${totalPrice.toLocaleString('en-IN')}`;
+    document.getElementById('breakdown-room')!.textContent = `₹${Math.round(baseRoom)}`;
+    document.getElementById('breakdown-food')!.textContent = `₹${Math.round(totalFoodCost)}`;
+    document.getElementById('breakdown-host')!.textContent = `₹${Math.round(hostEarning)}`;
+    document.getElementById('breakdown-community')!.textContent = `₹${Math.round(communityFund)}`;
+
+    const addonRow = document.getElementById('profile-addon-row')!;
+    if (profileAddon > 0) {
+      addonRow.style.display = 'flex';
+      document.getElementById('profile-addon-label')!.textContent = profileAddonText + ':';
+      document.getElementById('breakdown-addon')!.textContent = `₹${profileAddon}`;
+    } else {
+      addonRow.style.display = 'none';
+    }
+  }
+
+  // Attach event listeners to all inputs
+  document.querySelectorAll('#pricing-form input, #pricing-form select').forEach(element => {
+    element.addEventListener('input', calculatePrice);
+    element.addEventListener('change', calculatePrice);
+  });
+
+  // Run initial calculation on page load
+  calculatePrice();
+</script>
+
+<style>
+  .calc-card {
+    background: #ffffff;
+    border: 1px solid #c8e6c9;
+    border-radius: 12px;
+    padding: 24px;
+    margin-top: 20px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+  }
+
+  .input-group {
+    margin-bottom: 18px;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .input-group label {
+    font-weight: bold;
+    color: #1b382b;
+    margin-bottom: 2px;
+  }
+
+  .input-group small {
+    color: #666;
+    font-size: 0.82rem;
+    margin-bottom: 6px;
+  }
+
+  .input-group input, .input-group select {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 1rem;
+    background-color: #fafafa;
+  }
+
+  .results-box {
+    margin-top: 30px;
+    background-color: #f2f7f3;
+    border: 2px solid #2e7d32;
+    border-radius: 10px;
+    padding: 20px;
+  }
+
+  .results-box h2 {
+    margin-top: 0;
+    font-size: 1.2rem;
+    color: #1b382b;
+  }
+
+  .result-row {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+    font-size: 0.95rem;
+  }
+
+  .total-row {
+    font-size: 1.3rem;
+    color: #2e7d32;
+    padding-bottom: 8px;
+  }
+
+  .community-highlight {
+    background-color: #e8f5e9;
+    padding: 8px;
+    border-radius: 4px;
+    font-weight: bold;
+    color: #1b5e20;
+  }
+
+  hr {
+    border: 0;
+    border-top: 1px solid #c8e6c9;
+    margin: 12px 0;
+  }
+</style>
