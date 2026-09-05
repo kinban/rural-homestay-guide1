@@ -74,7 +74,7 @@ Different traveler groups have distinct safety, comfort, and utility needs. Host
 
 ---
 
-## 6. Pre-Arrival Guest Message Template
+## 3. Pre-Arrival Guest Message Template
 
 ```text
 Namaste! Here are 3 quick reminders before your journey:
